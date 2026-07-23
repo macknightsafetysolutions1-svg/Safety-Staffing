@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
 import ProspectFinder from './components/ProspectFinder'
 import ContactedPage from './components/ContactedPage'
+import LoginPage from './components/LoginPage'
 import { useContacted } from './lib/contacted'
-import { useUserName } from './lib/user'
+import { useAuth } from './lib/auth'
 import './App.css'
 
 type Route = 'search' | 'contacted'
@@ -12,8 +13,8 @@ function parseHash(): Route {
 }
 
 export default function App() {
+  const auth = useAuth()
   const store = useContacted()
-  const [userName, setUserName] = useUserName()
   const [route, setRoute] = useState<Route>(() => parseHash())
 
   useEffect(() => {
@@ -21,6 +22,10 @@ export default function App() {
     window.addEventListener('hashchange', onHash)
     return () => window.removeEventListener('hashchange', onHash)
   }, [])
+
+  if (!auth.user) {
+    return <LoginPage auth={auth} />
+  }
 
   const contactedCount = store.contacted.length
 
@@ -34,18 +39,6 @@ export default function App() {
           </span>
         </a>
         <div className="app-bar__right">
-          <label className="app-user">
-            <span className="app-user__label">You</span>
-            <input
-              className="app-user__input"
-              type="text"
-              value={userName}
-              onChange={(e) => setUserName(e.target.value)}
-              placeholder="Your name"
-              autoComplete="name"
-              aria-label="Your name (signs the notes you add)"
-            />
-          </label>
           <nav className="app-bar__tabs" aria-label="Primary">
             <a
               className={`app-tab ${route === 'search' ? 'is-active' : ''}`}
@@ -65,6 +58,15 @@ export default function App() {
               ) : null}
             </a>
           </nav>
+          <div className="app-user">
+            <span className="app-user__who">
+              <span className="app-user__name">{auth.user.name}</span>
+              <span className="app-user__title">{auth.user.title}</span>
+            </span>
+            <button type="button" className="app-user__logout" onClick={auth.logout}>
+              Log out
+            </button>
+          </div>
         </div>
       </header>
 
@@ -72,7 +74,7 @@ export default function App() {
         {route === 'search' ? (
           <ProspectFinder store={store} />
         ) : (
-          <ContactedPage store={store} userName={userName} />
+          <ContactedPage store={store} userName={auth.user.name} />
         )}
       </main>
     </div>

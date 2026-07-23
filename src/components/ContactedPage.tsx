@@ -87,11 +87,7 @@ function ContactedCard({
             <button type="submit" className="btn btn--primary" disabled={!canAdd}>
               Add note
             </button>
-            {!hasName ? (
-              <span className="note-form__hint">Add your name in the top bar to sign notes.</span>
-            ) : (
-              <span className="note-form__hint muted">Signing as {userName.trim()}</span>
-            )}
+            <span className="note-form__hint muted">Signing as {userName.trim()}</span>
           </div>
         </form>
 
