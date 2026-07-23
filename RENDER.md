@@ -7,9 +7,11 @@ If the site shows **“APPLICATION LOADING / SERVICE WAKING UP”** in a loop, t
 1. **Repository:** `Safety-Staffing`
 2. **Branch:** `main` (or `cursor/safety-staffing-lead-site-d629` if main is empty)
 3. **Runtime:** Node
-4. **Build command:** `npm install && npm run build`
+4. **Build command:** `npm install --include=dev && npm run build`
 5. **Start command:** `npm start`
 6. **Health check path:** `/api/health`  ← important
+
+> If you saw `Cannot find type definition file for 'vite/client'` or `'node'`, the fix is already on `main`. Use the build command above, then Manual Deploy.
 
 ## Environment variables
 
