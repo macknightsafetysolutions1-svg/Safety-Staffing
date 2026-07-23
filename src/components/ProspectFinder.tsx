@@ -443,7 +443,7 @@ export default function ProspectFinder() {
         <fieldset className="finder__subfilter">
           <legend>Industry subfilter</legend>
           <p className="finder__subfilter-hint">
-            Narrow results to a vertical. Choose All industries or a specific sector, then search.
+            Narrow the list by vertical. Chips update results immediately after a search.
           </p>
           <div className="finder__chips" role="group" aria-label="Industry">
             <button

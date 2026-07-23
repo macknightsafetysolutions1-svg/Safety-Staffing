@@ -252,10 +252,16 @@ app.post('/api/admin/users/:id/reset-link', requireAdmin, async (req, res) => {
 
 const distDir = path.resolve(__dirname, '../dist')
 app.use(express.static(distDir))
-app.get(/^(?!\/api).*/, (req, res, next) => {
-  if (req.method !== 'GET') return next()
-  res.sendFile(path.join(distDir, 'index.html'), (err) => {
-    if (err) next()
+app.get(/^(?!\/api).*/, (req, res) => {
+  const indexPath = path.join(distDir, 'index.html')
+  res.sendFile(indexPath, (err) => {
+    if (err) {
+      console.error('[server] Failed to serve index.html:', err.message)
+      res
+        .status(500)
+        .type('text')
+        .send('App build missing. Check that `npm run build` completed on the host.')
+    }
   })
 })
 
@@ -268,6 +274,6 @@ if (seed.created) {
   console.log(`[auth] Admin account ready: ${seed.email}`)
 }
 
-app.listen(PORT, () => {
-  console.log(`[server] MacKnight prospecting API on http://localhost:${PORT}`)
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`[server] MacKnight prospecting API on http://0.0.0.0:${PORT}`)
 })
