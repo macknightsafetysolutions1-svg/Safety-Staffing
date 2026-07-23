@@ -7,6 +7,7 @@ import {
   type RankedProspect,
   type SearchParams,
 } from '../lib/geo'
+import type { ContactedStore } from '../lib/contacted'
 
 const CITY_OPTIONS = Object.values(CITY_CENTROIDS)
   .map((c) => c.label)
@@ -19,10 +20,19 @@ function probabilityTier(score: number): { label: string; className: string } {
   return { label: 'Lower', className: 'tier tier--low' }
 }
 
-function ProspectCard({ prospect, rank }: { prospect: RankedProspect; rank: number }) {
+function ProspectCard({
+  prospect,
+  rank,
+  store,
+}: {
+  prospect: RankedProspect
+  rank: number
+  store: ContactedStore
+}) {
   const [open, setOpen] = useState(rank < 3)
   const tier = probabilityTier(prospect.needProbability)
   const dm = prospect.primaryDecisionMaker
+  const contacted = store.isContacted(prospect.id)
 
   return (
     <article className="prospect">
@@ -75,14 +85,24 @@ function ProspectCard({ prospect, rank }: { prospect: RankedProspect; rank: numb
         <p className="prospect__dm-empty">No stakeholder identified yet — enrich from CRM.</p>
       )}
 
-      <button
-        type="button"
-        className="prospect__toggle"
-        aria-expanded={open}
-        onClick={() => setOpen((v) => !v)}
-      >
-        {open ? 'Hide ranking factors' : 'Why this rank'}
-      </button>
+      <div className="prospect__actions">
+        <button
+          type="button"
+          className={contacted ? 'btn btn--done' : 'btn btn--primary'}
+          onClick={() => store.markContacted(prospect)}
+          disabled={contacted}
+        >
+          {contacted ? 'Contacted' : 'Mark as contacted'}
+        </button>
+        <button
+          type="button"
+          className="prospect__toggle"
+          aria-expanded={open}
+          onClick={() => setOpen((v) => !v)}
+        >
+          {open ? 'Hide ranking factors' : 'Why this rank'}
+        </button>
+      </div>
 
       {open ? (
         <div className="prospect__details">
@@ -119,7 +139,7 @@ function ProspectCard({ prospect, rank }: { prospect: RankedProspect; rank: numb
   )
 }
 
-export default function ProspectFinder() {
+export default function ProspectFinder({ store }: { store: ContactedStore }) {
   const [mode, setMode] = useState<GeoMode>('city')
   const [city, setCity] = useState('Houston')
   const [state, setState] = useState('TX')
@@ -167,6 +187,13 @@ export default function ProspectFinder() {
 
   return (
     <div className="finder">
+      <div className="tool-head">
+        <h1>Prospect search</h1>
+        <p className="muted">
+          Search a territory for active jobsites ranked by their probability of needing safety
+          staffing. Mark the ones worth pursuing as contacted.
+        </p>
+      </div>
       <form className="finder__form" onSubmit={handleSubmit}>
         <fieldset className="finder__mode">
           <legend className="sr-only">Search by city or state</legend>
@@ -291,7 +318,12 @@ export default function ProspectFinder() {
           ) : (
             <div className="finder__list">
               {results.map((prospect, index) => (
-                <ProspectCard key={prospect.id} prospect={prospect} rank={index} />
+                <ProspectCard
+                  key={prospect.id}
+                  prospect={prospect}
+                  rank={index}
+                  store={store}
+                />
               ))}
             </div>
           )}
