@@ -234,6 +234,87 @@
   width: 100%;
 }
 
+.finder__subfilter {
+  margin: 0;
+  padding: 1rem 0 0;
+  border: 0;
+  border-top: 1px solid rgba(242, 240, 235, 0.1);
+  display: grid;
+  gap: 0.75rem;
+}
+
+.finder__subfilter legend {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--amber);
+  padding: 0;
+}
+
+.finder__subfilter-hint {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--mist);
+}
+
+.finder__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.chip {
+  border: 1px solid rgba(242, 240, 235, 0.2);
+  background: transparent;
+  color: var(--mist);
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 0.45rem 0.7rem;
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+}
+
+.chip:hover {
+  border-color: rgba(229, 160, 18, 0.55);
+  color: var(--paper);
+}
+
+.chip.is-active {
+  border-color: var(--amber);
+  background: rgba(229, 160, 18, 0.14);
+  color: var(--paper);
+}
+
+.field--subfilter-select {
+  max-width: 22rem;
+}
+
+.prospect__industry {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0.35rem 0 0.45rem;
+}
+
+.prospect__industry-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: var(--amber);
+  padding: 0.2rem 0.4rem;
+}
+
+.prospect__industry-value {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--paper);
+}
+
 .finder__summary {
   display: flex;
   flex-wrap: wrap;
@@ -759,12 +840,8 @@
   }
 
   .finder__fields {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, 1fr) auto;
     align-items: end;
-  }
-
-  .finder__submit {
-    grid-column: 1 / -1;
   }
 
   .finder__submit .btn {
@@ -794,11 +871,7 @@
 
 @media (min-width: 900px) {
   .finder__fields {
-    grid-template-columns: 1.2fr 0.7fr 0.7fr 1.1fr auto;
-  }
-
-  .finder__submit {
-    grid-column: auto;
+    grid-template-columns: 1.4fr 0.8fr 0.8fr auto;
   }
 }
 

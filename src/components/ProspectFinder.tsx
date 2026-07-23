@@ -116,12 +116,14 @@ function ProspectCard({
         <div className="prospect__title-block">
           <p className="prospect__company">{prospect.company}</p>
           <h3 className="prospect__site">{prospect.siteName}</h3>
+          <p className="prospect__industry">
+            <span className="prospect__industry-label">Industry</span>
+            <span className="prospect__industry-value">{prospect.industry}</span>
+          </p>
           <p className="prospect__meta">
             {prospect.city}, {prospect.state}
             <span aria-hidden="true"> · </span>
             {prospect.distanceMiles} mi
-            <span aria-hidden="true"> · </span>
-            {prospect.industry}
             <span aria-hidden="true"> · </span>
             {prospect.phase}
             <span aria-hidden="true"> · </span>
@@ -279,7 +281,12 @@ export default function ProspectFinder() {
     setPipeline(loadPipeline())
   }, [])
 
-  function updatePipeline(id: string, entry: PipelineEntry) {
+  const applyIndustryFilter = (nextIndustry: Industry | '') => {
+    setIndustry(nextIndustry)
+    setQuery((prev) => (prev ? { ...prev, industry: nextIndustry } : prev))
+  }
+
+  const updatePipeline = (id: string, entry: PipelineEntry) => {
     setPipeline((prev) => {
       const next = { ...prev, [id]: entry }
       savePipeline(next)
@@ -426,12 +433,45 @@ export default function ProspectFinder() {
             </select>
           </label>
 
-          <label className="field">
-            <span>Industry</span>
+          <div className="finder__submit">
+            <button type="submit" className="btn btn--primary">
+              Find jobsites
+            </button>
+          </div>
+        </div>
+
+        <fieldset className="finder__subfilter">
+          <legend>Industry subfilter</legend>
+          <p className="finder__subfilter-hint">
+            Narrow results to a vertical. Choose All industries or a specific sector, then search.
+          </p>
+          <div className="finder__chips" role="group" aria-label="Industry">
+            <button
+              type="button"
+              className={`chip ${industry === '' ? 'is-active' : ''}`}
+              aria-pressed={industry === ''}
+              onClick={() => applyIndustryFilter('')}
+            >
+              All industries
+            </button>
+            {INDUSTRY_OPTIONS.map((item) => (
+              <button
+                key={item}
+                type="button"
+                className={`chip ${industry === item ? 'is-active' : ''}`}
+                aria-pressed={industry === item}
+                onClick={() => applyIndustryFilter(item)}
+              >
+                {item}
+              </button>
+            ))}
+          </div>
+          <label className="field field--subfilter-select">
+            <span>Or select industry</span>
             <select
               name="industry"
               value={industry}
-              onChange={(e) => setIndustry((e.target.value || '') as Industry | '')}
+              onChange={(e) => applyIndustryFilter((e.target.value || '') as Industry | '')}
             >
               <option value="">All industries</option>
               {INDUSTRY_OPTIONS.map((item) => (
@@ -441,13 +481,7 @@ export default function ProspectFinder() {
               ))}
             </select>
           </label>
-
-          <div className="finder__submit">
-            <button type="submit" className="btn btn--primary">
-              Find jobsites
-            </button>
-          </div>
-        </div>
+        </fieldset>
 
         {error ? (
           <p className="form-error" role="alert">
