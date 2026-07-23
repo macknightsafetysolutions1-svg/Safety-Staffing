@@ -4,6 +4,7 @@ import type { RankedProspect } from './geo'
 export type ProspectNote = {
   id: string
   text: string
+  author: string
   createdAt: string
 }
 
@@ -26,7 +27,7 @@ export type ContactedStore = {
   isContacted: (id: string) => boolean
   markContacted: (prospect: RankedProspect) => void
   removeContacted: (id: string) => void
-  addNote: (id: string, text: string) => void
+  addNote: (id: string, text: string, author: string) => void
   deleteNote: (id: string, noteId: string) => void
 }
 
@@ -90,7 +91,7 @@ export function useContacted(): ContactedStore {
     setContacted((prev) => prev.filter((c) => c.id !== id))
   }, [])
 
-  const addNote = useCallback((id: string, text: string) => {
+  const addNote = useCallback((id: string, text: string, author: string) => {
     const trimmed = text.trim()
     if (!trimmed) return
     setContacted((prev) =>
@@ -99,7 +100,12 @@ export function useContacted(): ContactedStore {
           ? {
               ...c,
               notes: [
-                { id: makeId(), text: trimmed, createdAt: new Date().toISOString() },
+                {
+                  id: makeId(),
+                  text: trimmed,
+                  author: author.trim(),
+                  createdAt: new Date().toISOString(),
+                },
                 ...c.notes,
               ],
             }

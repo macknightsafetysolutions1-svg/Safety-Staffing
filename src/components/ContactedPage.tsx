@@ -13,14 +13,24 @@ function formatDateTime(iso: string): string {
   })
 }
 
-function ContactedCard({ item, store }: { item: ContactedProspect; store: ContactedStore }) {
+function ContactedCard({
+  item,
+  store,
+  userName,
+}: {
+  item: ContactedProspect
+  store: ContactedStore
+  userName: string
+}) {
   const [note, setNote] = useState('')
   const dm = item.decisionMaker
+  const hasName = userName.trim().length > 0
+  const canAdd = note.trim().length > 0 && hasName
 
   function submitNote(event: FormEvent) {
     event.preventDefault()
-    if (!note.trim()) return
-    store.addNote(item.id, note)
+    if (!canAdd) return
+    store.addNote(item.id, note, userName)
     setNote('')
   }
 
@@ -73,9 +83,16 @@ function ContactedCard({ item, store }: { item: ContactedProspect; store: Contac
             onChange={(e) => setNote(e.target.value)}
             placeholder="Add a note — call summary, next step, follow-up date…"
           />
-          <button type="submit" className="btn btn--primary" disabled={!note.trim()}>
-            Add note
-          </button>
+          <div className="note-form__foot">
+            <button type="submit" className="btn btn--primary" disabled={!canAdd}>
+              Add note
+            </button>
+            {!hasName ? (
+              <span className="note-form__hint">Add your name in the top bar to sign notes.</span>
+            ) : (
+              <span className="note-form__hint muted">Signing as {userName.trim()}</span>
+            )}
+          </div>
         </form>
 
         {item.notes.length === 0 ? (
@@ -85,9 +102,12 @@ function ContactedCard({ item, store }: { item: ContactedProspect; store: Contac
             {item.notes.map((n) => (
               <li key={n.id} className="note">
                 <div className="note__head">
-                  <time className="note__date" dateTime={n.createdAt}>
-                    {formatDateTime(n.createdAt)}
-                  </time>
+                  <span className="note__byline">
+                    {n.author ? <span className="note__author">{n.author}</span> : null}
+                    <time className="note__date" dateTime={n.createdAt}>
+                      {formatDateTime(n.createdAt)}
+                    </time>
+                  </span>
                   <button
                     type="button"
                     className="note__delete"
@@ -117,7 +137,13 @@ function ContactedCard({ item, store }: { item: ContactedProspect; store: Contac
   )
 }
 
-export default function ContactedPage({ store }: { store: ContactedStore }) {
+export default function ContactedPage({
+  store,
+  userName,
+}: {
+  store: ContactedStore
+  userName: string
+}) {
   const { contacted } = store
 
   return (
@@ -141,7 +167,7 @@ export default function ContactedPage({ store }: { store: ContactedStore }) {
       ) : (
         <div className="contacted-list">
           {contacted.map((item) => (
-            <ContactedCard key={item.id} item={item} store={store} />
+            <ContactedCard key={item.id} item={item} store={store} userName={userName} />
           ))}
         </div>
       )}

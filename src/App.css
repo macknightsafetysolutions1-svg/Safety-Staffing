@@ -1068,6 +1068,43 @@
   flex-shrink: 0;
 }
 
+.app-bar__right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.app-user {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.app-user__label {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--mist);
+}
+
+.app-user__input {
+  width: 9.5rem;
+  max-width: 40vw;
+  padding: 0.4rem 0.6rem;
+  background: rgba(18, 20, 24, 0.6);
+  border: 1px solid rgba(242, 240, 235, 0.18);
+  color: var(--paper);
+  font-size: 0.9rem;
+}
+
+.app-user__input:focus-visible {
+  border-color: var(--amber);
+}
+
 .app-bar__tabs {
   display: flex;
   align-items: center;
@@ -1292,10 +1329,25 @@
 }
 
 .note-form .btn {
-  justify-self: start;
   min-height: 2.4rem;
   padding: 0.45rem 1.1rem;
   font-size: 0.95rem;
+}
+
+.note-form__foot {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.note-form__hint {
+  font-size: 0.85rem;
+  color: var(--amber);
+}
+
+.note-form__hint.muted {
+  color: var(--mist);
 }
 
 .notes__empty {
@@ -1322,6 +1374,25 @@
   justify-content: space-between;
   gap: 0.75rem;
   margin-bottom: 0.3rem;
+}
+
+.note__byline {
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.3rem 0.5rem;
+}
+
+.note__author {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--paper);
+}
+
+.note__author::after {
+  content: '·';
+  margin-left: 0.5rem;
+  color: var(--mist);
 }
 
 .note__date {
