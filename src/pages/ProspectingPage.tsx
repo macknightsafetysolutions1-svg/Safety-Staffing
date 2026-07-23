@@ -44,6 +44,7 @@ export default function ProspectingPage() {
           </p>
           <ul className="app-intro__points">
             <li>Geo filter by city or state + miles</li>
+            <li>Filter by industry — including data centers, fabs, EV/battery, and tech builds</li>
             <li>Ranked by probability of needing SSO / HSE coverage</li>
             <li>Decision maker, talk track, and pipeline status for sales</li>
           </ul>

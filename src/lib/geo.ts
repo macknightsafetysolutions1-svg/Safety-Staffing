@@ -135,7 +135,11 @@ export function scoreNeedProbability(site: ProspectSite): { score: number; reaso
 
   const industryBoost: Partial<Record<ProspectSite['industry'], number>> = {
     'Oil & gas': 8,
+    Semiconductor: 8,
+    'EV / battery': 8,
+    'Data centers': 7,
     'Heavy civil': 6,
+    'Tech construction': 6,
     Utilities: 5,
     'Commercial construction': 4,
   }
