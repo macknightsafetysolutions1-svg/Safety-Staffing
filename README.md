@@ -1,35 +1,65 @@
 # MacKnight Safety Solutions — Sales Prospecting
 
-Internal tool for the MacKnight sales team to find jobsites that likely need safety staffing services and initiate outbound conversations.
+Internal tool for the MacKnight sales team to find jobsites that likely need safety staffing and initiate outbound conversations.
 
-## What it does
+## Auth
 
-1. **Territory search** — City + mileage or State + mileage
-2. **Need ranking** — Jobsites sorted by probability they need SSO / HSE / safety coordinator coverage
-3. **Decision makers** — Primary outreach target with confidence score, email/phone when available
-4. **Sales actions** — Copy email/phone, copy talk track, track pipeline status + notes (saved in browser `localStorage`)
+- Password login for team members
+- Forgot / reset password flow
+- Forced password change on first login / after admin reset
+- Admin console for `smonroe@macknightsafety.com`
 
-## Stack
+### Seeded admin
 
-- Vite + React + TypeScript
-- Pure CSS
+On first server start:
 
-## Develop
+- **Email:** `smonroe@macknightsafety.com`
+- **Temporary password:** `MacknightAdmin!2026`
+- You will be required to set a new password before using the app
+
+### Admin capabilities (`/admin`)
+
+- Create sales/admin users
+- Generate password reset links (emailed when SMTP is configured)
+- Set temporary passwords
+- Enable / disable accounts
+- Promote / demote roles (primary admin protected)
+
+## Run locally
 
 ```bash
 npm install
 npm run dev
 ```
 
-## Build
+- Web: `http://localhost:5173` (proxies `/api` to the server)
+- API / production-style serve: `http://localhost:8787`
+
+## Production
 
 ```bash
 npm run build
-npm run preview
+npm start
 ```
 
-## Data
+Set environment variables:
 
-Demo prospects live in `src/data/prospects.ts`. Scoring and geofencing are in `src/lib/geo.ts`. Replace with live permit / OSHA / CRM feeds for production use.
+| Variable | Purpose |
+|---|---|
+| `PORT` | Server port (default `8787`) |
+| `JWT_SECRET` | Session signing secret (**required in production**) |
+| `APP_ORIGIN` | Public site URL used in reset links |
+| `SMTP_HOST` / `SMTP_PORT` / `SMTP_USER` / `SMTP_PASS` / `SMTP_FROM` | Optional email delivery for resets |
 
-Pipeline status is stored locally under `macknight-prospect-pipeline`.
+Without SMTP, forgot-password and admin “Reset link” still work and return/show the reset URL so access can be restored.
+
+User data is stored in `data/users.json` (gitignored). Persist that directory on your host.
+
+## Prospecting features
+
+1. Territory search — city + mileage or state + mileage
+2. Need ranking — jobsites sorted by safety-staffing need probability
+3. Decision makers — primary outreach target + contact details
+4. Sales actions — talk track, copy contact, local pipeline notes
+
+Demo prospects: `src/data/prospects.ts` · scoring: `src/lib/geo.ts`
