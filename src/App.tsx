@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent, type RefObject } from 'react'
+import heroImage from './assets/hero.jpg'
 import './App.css'
 
 type FormState = {
@@ -279,10 +280,10 @@ export default function App() {
         <section className="hero" aria-labelledby="hero-brand">
           <div className="hero__media" aria-hidden="true">
             <img
-              src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=2400&q=80"
+              src={heroImage}
               alt=""
               width={2400}
-              height={1600}
+              height={1590}
             />
             <div className="hero__veil" />
           </div>
