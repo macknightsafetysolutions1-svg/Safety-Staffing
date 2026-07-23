@@ -55,6 +55,44 @@
   transform: translateY(-1px);
 }
 
+.nav__links {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.nav__link {
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--paper);
+  padding: 0.5rem 0.35rem;
+  opacity: 0.85;
+  transition: opacity 0.2s ease, color 0.2s ease;
+}
+
+.nav__link:hover {
+  opacity: 1;
+  color: var(--amber);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.muted {
+  color: var(--mist);
+}
+
 /* —— Buttons —— */
 .btn {
   display: inline-flex;
@@ -231,6 +269,327 @@
 .reveal.is-visible {
   opacity: 1;
   transform: none;
+}
+
+/* —— Prospect finder —— */
+.finder-section {
+  background:
+    radial-gradient(ellipse 55% 45% at 100% 10%, rgba(229, 160, 18, 0.1), transparent 60%),
+    linear-gradient(180deg, #16181d 0%, var(--ink) 100%);
+  border-bottom: 1px solid rgba(229, 160, 18, 0.1);
+}
+
+.finder__form {
+  display: grid;
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+  padding: 1.35rem;
+  background: rgba(18, 20, 24, 0.65);
+  border: 1px solid rgba(242, 240, 235, 0.12);
+}
+
+.finder__mode {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.finder__mode label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.55rem 0.9rem;
+  border: 1px solid rgba(242, 240, 235, 0.18);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--mist);
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+}
+
+.finder__mode label.is-active {
+  border-color: var(--amber);
+  color: var(--paper);
+  background: rgba(229, 160, 18, 0.1);
+}
+
+.finder__mode input {
+  accent-color: var(--amber);
+}
+
+.finder__fields {
+  display: grid;
+  gap: 1rem;
+}
+
+.finder__submit {
+  display: flex;
+  align-items: end;
+}
+
+.finder__submit .btn {
+  width: 100%;
+}
+
+.finder__summary {
+  display: grid;
+  gap: 0.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.finder__empty {
+  color: var(--mist);
+  padding: 1.5rem 0;
+}
+
+.finder__list {
+  display: grid;
+  gap: 1rem;
+}
+
+.prospect {
+  border: 1px solid rgba(242, 240, 235, 0.12);
+  background: rgba(28, 31, 36, 0.85);
+  padding: 1.15rem 1.2rem 1rem;
+}
+
+.prospect__header {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.85rem 1rem;
+  align-items: start;
+  margin-bottom: 1rem;
+}
+
+.prospect__rank {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--amber);
+  letter-spacing: 0.04em;
+}
+
+.prospect__company {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--mist);
+  margin-bottom: 0.2rem;
+}
+
+.prospect__site {
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1.1;
+  margin-bottom: 0.35rem;
+}
+
+.prospect__meta {
+  font-size: 0.92rem;
+  color: var(--mist);
+}
+
+.prospect__score {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 0.75rem;
+  padding-top: 0.35rem;
+  border-top: 1px solid rgba(242, 240, 235, 0.08);
+}
+
+.prospect__score strong {
+  font-family: var(--font-display);
+  font-size: 1.85rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--paper);
+}
+
+.prospect__score-label {
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--mist);
+}
+
+.tier {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.28rem 0.5rem;
+}
+
+.tier--hot {
+  background: rgba(229, 160, 18, 0.22);
+  color: var(--amber-hot);
+}
+
+.tier--high {
+  background: rgba(229, 160, 18, 0.12);
+  color: var(--amber);
+}
+
+.tier--mid {
+  background: rgba(196, 201, 209, 0.12);
+  color: var(--mist);
+}
+
+.tier--low {
+  background: rgba(196, 201, 209, 0.06);
+  color: var(--mist);
+}
+
+.prospect__dm {
+  display: grid;
+  gap: 0.55rem;
+  padding: 0.9rem 0;
+  border-top: 1px solid rgba(242, 240, 235, 0.08);
+}
+
+.prospect__dm-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--amber);
+}
+
+.prospect__dm-body {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.prospect__dm-body strong {
+  display: block;
+  font-size: 1.05rem;
+}
+
+.prospect__dm-body span {
+  color: var(--mist);
+  font-size: 0.95rem;
+}
+
+.prospect__dm-conf {
+  display: grid;
+  gap: 0.15rem;
+  font-size: 0.88rem;
+  color: var(--mist);
+}
+
+.prospect__dm-source {
+  font-size: 0.8rem;
+  opacity: 0.85;
+}
+
+.prospect__dm-contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+}
+
+.prospect__dm-contact a {
+  color: var(--paper);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+  text-decoration-color: rgba(229, 160, 18, 0.55);
+}
+
+.prospect__dm-contact a:hover {
+  color: var(--amber);
+}
+
+.prospect__dm-empty {
+  color: var(--mist);
+  font-size: 0.95rem;
+  padding: 0.75rem 0;
+  border-top: 1px solid rgba(242, 240, 235, 0.08);
+}
+
+.prospect__toggle {
+  margin-top: 0.35rem;
+  padding: 0.45rem 0;
+  border: 0;
+  background: transparent;
+  color: var(--amber);
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  text-align: left;
+}
+
+.prospect__toggle:hover {
+  color: var(--amber-hot);
+}
+
+.prospect__details {
+  display: grid;
+  gap: 1rem;
+  margin-top: 0.5rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(242, 240, 235, 0.08);
+}
+
+.prospect__reasons,
+.prospect__signals ul,
+.prospect__stakeholders ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  color: var(--mist);
+  display: grid;
+  gap: 0.35rem;
+}
+
+.prospect__stakeholders strong {
+  color: var(--paper);
+}
+
+@media (min-width: 640px) {
+  .finder__fields {
+    grid-template-columns: repeat(2, 1fr) auto;
+    align-items: end;
+  }
+
+  .finder__submit .btn {
+    width: auto;
+    min-width: 9.5rem;
+  }
+
+  .prospect__header {
+    grid-template-columns: auto 1fr auto;
+  }
+
+  .prospect__score {
+    grid-column: auto;
+    border-top: 0;
+    padding-top: 0;
+    flex-direction: column;
+    align-items: flex-end;
+    text-align: right;
+    gap: 0.2rem;
+  }
+}
+
+@media (min-width: 900px) {
+  .finder__form {
+    padding: 1.75rem;
+  }
+
+  .finder__fields {
+    grid-template-columns: 1.4fr 0.8fr 0.8fr auto;
+  }
 }
 
 /* —— Roles —— */

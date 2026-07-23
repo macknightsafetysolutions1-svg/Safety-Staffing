@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent, type RefObject } from 'react'
+import ProspectFinder from './components/ProspectFinder'
 import heroImage from './assets/hero.jpg'
 import './App.css'
 
@@ -260,6 +261,7 @@ function LeadForm() {
 }
 
 export default function App() {
+  const finderRef = useReveal<HTMLElement>()
   const rolesRef = useReveal<HTMLElement>()
   const processRef = useReveal<HTMLElement>()
   const formRef = useReveal<HTMLElement>()
@@ -271,9 +273,14 @@ export default function App() {
           <span className="nav__mark" aria-hidden="true" />
           Ridgeguard
         </a>
-        <a className="nav__cta" href="#request">
-          Request staffing
-        </a>
+        <div className="nav__links">
+          <a className="nav__link" href="#finder">
+            Find sites
+          </a>
+          <a className="nav__cta" href="#request">
+            Request staffing
+          </a>
+        </div>
       </header>
 
       <main id="top">
@@ -302,13 +309,31 @@ export default function App() {
               and productive.
             </p>
             <div className="hero__actions">
-              <a className="btn btn--primary" href="#request">
+              <a className="btn btn--primary" href="#finder">
+                Find high-need sites
+              </a>
+              <a className="btn btn--ghost" href="#request">
                 Request staffing
               </a>
-              <a className="btn btn--ghost" href="#roles">
-                Roles we fill
-              </a>
             </div>
+          </div>
+        </section>
+
+        <section
+          id="finder"
+          className="section finder-section reveal"
+          ref={finderRef}
+          aria-labelledby="finder-heading"
+        >
+          <div className="section__inner">
+            <p className="eyebrow">Lead generator</p>
+            <h2 id="finder-heading">Map your territory. Rank who needs safety staff.</h2>
+            <p className="section__lede">
+              Set a city or state and a mileage radius. We surface active sites
+              ranked by need probability and flag the person most likely to own
+              the staffing decision.
+            </p>
+            <ProspectFinder />
           </div>
         </section>
 
