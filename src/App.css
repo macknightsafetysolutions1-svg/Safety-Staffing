@@ -759,8 +759,12 @@
   }
 
   .finder__fields {
-    grid-template-columns: repeat(2, 1fr) auto;
+    grid-template-columns: repeat(2, 1fr);
     align-items: end;
+  }
+
+  .finder__submit {
+    grid-column: 1 / -1;
   }
 
   .finder__submit .btn {
@@ -790,7 +794,11 @@
 
 @media (min-width: 900px) {
   .finder__fields {
-    grid-template-columns: 1.4fr 0.8fr 0.8fr auto;
+    grid-template-columns: 1.2fr 0.7fr 0.7fr 1.1fr auto;
+  }
+
+  .finder__submit {
+    grid-column: auto;
   }
 }
 

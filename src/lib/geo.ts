@@ -2,6 +2,7 @@ import {
   CITY_CENTROIDS,
   PROSPECTS,
   STATE_CENTROIDS,
+  type Industry,
   type ProspectSite,
   type Stakeholder,
 } from '../data/prospects'
@@ -15,6 +16,8 @@ export type SearchParams = {
   city: string
   state: string
   radiusMiles: number
+  /** Empty string = all industries */
+  industry: Industry | ''
 }
 
 export type RankedProspect = ProspectSite & {
@@ -172,11 +175,13 @@ export function searchProspects(params: SearchParams): {
 
   const radius = Math.max(1, Math.min(500, params.radiusMiles || 50))
   const stateFilter = params.mode === 'state' ? params.state.toUpperCase() : null
+  const industryFilter = params.industry || null
 
   const results: RankedProspect[] = []
 
   for (const site of PROSPECTS) {
     if (stateFilter && site.state !== stateFilter) continue
+    if (industryFilter && site.industry !== industryFilter) continue
 
     const dist = distanceMiles(origin.lat, origin.lng, site.lat, site.lng)
     if (dist > radius) continue

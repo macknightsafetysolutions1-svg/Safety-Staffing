@@ -37,6 +37,17 @@ export type ProspectSite = {
   stakeholders: Stakeholder[]
 }
 
+export type Industry = ProspectSite['industry']
+
+export const INDUSTRY_OPTIONS: Industry[] = [
+  'Heavy civil',
+  'Oil & gas',
+  'Manufacturing',
+  'Commercial construction',
+  'Warehousing',
+  'Utilities',
+]
+
 /** Demo corpus — plug in permit / OSHA / CRM feeds in production. */
 export const PROSPECTS: ProspectSite[] = [
   {

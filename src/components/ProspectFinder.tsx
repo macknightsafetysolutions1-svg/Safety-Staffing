@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, type FormEvent } from 'react'
-import { CITY_CENTROIDS, US_STATES } from '../data/prospects'
+import { CITY_CENTROIDS, INDUSTRY_OPTIONS, US_STATES, type Industry } from '../data/prospects'
 import {
   RADIUS_OPTIONS,
   searchProspects,
@@ -263,11 +263,13 @@ export default function ProspectFinder() {
   const [city, setCity] = useState('Houston')
   const [state, setState] = useState('TX')
   const [radiusMiles, setRadiusMiles] = useState(50)
+  const [industry, setIndustry] = useState<Industry | ''>('')
   const [query, setQuery] = useState<SearchParams | null>({
     mode: 'city',
     city: 'Houston',
     state: 'TX',
     radiusMiles: 50,
+    industry: '',
   })
   const [error, setError] = useState('')
   const [pipeline, setPipeline] = useState<PipelineMap>({})
@@ -318,6 +320,7 @@ export default function ProspectFinder() {
       city: city.trim(),
       state,
       radiusMiles,
+      industry,
     }
     const check = searchProspects(next)
     if (check.error) {
@@ -423,6 +426,22 @@ export default function ProspectFinder() {
             </select>
           </label>
 
+          <label className="field">
+            <span>Industry</span>
+            <select
+              name="industry"
+              value={industry}
+              onChange={(e) => setIndustry((e.target.value || '') as Industry | '')}
+            >
+              <option value="">All industries</option>
+              {INDUSTRY_OPTIONS.map((item) => (
+                <option key={item} value={item}>
+                  {item}
+                </option>
+              ))}
+            </select>
+          </label>
+
           <div className="finder__submit">
             <button type="submit" className="btn btn--primary">
               Find jobsites
@@ -445,6 +464,12 @@ export default function ProspectFinder() {
                 <strong>{visibleResults.length}</strong> jobsite
                 {visibleResults.length === 1 ? '' : 's'} within{' '}
                 <strong>{query.radiusMiles} mi</strong> of <strong>{originLabel}</strong>
+                {query.industry ? (
+                  <>
+                    {' '}
+                    in <strong>{query.industry}</strong>
+                  </>
+                ) : null}
                 {hideWorked && workedCount > 0 ? (
                   <span className="muted"> · {workedCount} hidden (already worked)</span>
                 ) : null}
