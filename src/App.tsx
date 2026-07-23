@@ -37,18 +37,18 @@ const ROLES = [
 const STEPS = [
   {
     num: '01',
-    title: 'Tell us the gap',
-    copy: 'Share your site, trade, certifications needed, and when you need coverage.',
+    title: 'Qualify the lead',
+    copy: 'Capture the site, trade, certifications needed, and the coverage window.',
   },
   {
     num: '02',
-    title: 'We match vetted talent',
-    copy: 'Every candidate is screened for credentials, experience, and jobsite readiness.',
+    title: 'Match vetted talent',
+    copy: 'Screen candidates for credentials, experience, and jobsite readiness.',
   },
   {
     num: '03',
-    title: 'They show up ready',
-    copy: 'Credential packets, onboarding support, and a dedicated staffing lead stay with you.',
+    title: 'Deploy a ready crew',
+    copy: 'Send credential packets, onboarding support, and a dedicated staffing lead.',
   },
 ]
 
@@ -110,24 +110,24 @@ function LeadForm() {
 
     if (!form.name.trim() || !form.company.trim() || !form.email.trim() || !form.roleNeeded) {
       setStatus('error')
-      setErrorMsg('Please fill in your name, company, email, and the role you need.')
+      setErrorMsg('Add the contact name, company, email, and the role needed.')
       return
     }
 
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
       setStatus('error')
-      setErrorMsg('Enter a valid work email so we can follow up.')
+      setErrorMsg('Enter a valid email for the contact.')
       return
     }
 
     setStatus('submitting')
 
-    // Demo lead capture — replace with your CRM / form endpoint.
+    // Demo lead capture — replace with your CRM / pipeline endpoint.
     await new Promise((resolve) => setTimeout(resolve, 900))
 
-    const leads = JSON.parse(localStorage.getItem('ridgeguard-leads') ?? '[]') as StoredLead[]
+    const leads = JSON.parse(localStorage.getItem('macknight-leads') ?? '[]') as StoredLead[]
     leads.push({ ...form, submittedAt: new Date().toISOString() })
-    localStorage.setItem('ridgeguard-leads', JSON.stringify(leads))
+    localStorage.setItem('macknight-leads', JSON.stringify(leads))
 
     setStatus('success')
     setForm(INITIAL_FORM)
@@ -136,14 +136,14 @@ function LeadForm() {
   if (status === 'success') {
     return (
       <div className="form-success" role="status">
-        <p className="form-success__eyebrow">Request received</p>
-        <h3>A staffing lead will contact you within one business day.</h3>
+        <p className="form-success__eyebrow">Lead saved</p>
+        <h3>This lead is saved to your pipeline.</h3>
         <p>
-          Keep an eye on your inbox—we’ll confirm your needs and send qualified
-          candidate profiles.
+          Follow up with the contact and match qualified candidate profiles to
+          the site.
         </p>
         <button type="button" className="btn btn--ghost" onClick={() => setStatus('idle')}>
-          Submit another request
+          Log another lead
         </button>
       </div>
     )
@@ -153,7 +153,7 @@ function LeadForm() {
     <form className="lead-form" onSubmit={handleSubmit} noValidate>
       <div className="lead-form__grid">
         <label className="field">
-          <span>Full name</span>
+          <span>Contact name</span>
           <input
             type="text"
             name="name"
@@ -165,7 +165,7 @@ function LeadForm() {
           />
         </label>
         <label className="field">
-          <span>Company</span>
+          <span>Company / site</span>
           <input
             type="text"
             name="company"
@@ -177,7 +177,7 @@ function LeadForm() {
           />
         </label>
         <label className="field">
-          <span>Work email</span>
+          <span>Contact email</span>
           <input
             type="email"
             name="email"
@@ -189,7 +189,7 @@ function LeadForm() {
           />
         </label>
         <label className="field">
-          <span>Phone</span>
+          <span>Contact phone</span>
           <input
             type="tel"
             name="phone"
@@ -233,7 +233,7 @@ function LeadForm() {
           </select>
         </label>
         <label className="field field--full">
-          <span>Project details</span>
+          <span>Notes</span>
           <textarea
             name="details"
             rows={4}
@@ -252,9 +252,9 @@ function LeadForm() {
 
       <div className="lead-form__footer">
         <button type="submit" className="btn btn--primary" disabled={status === 'submitting'}>
-          {status === 'submitting' ? 'Sending…' : 'Request staffing'}
+          {status === 'submitting' ? 'Saving…' : 'Save lead'}
         </button>
-        <p className="lead-form__note">No obligation. Typical response within one business day.</p>
+        <p className="lead-form__note">Saved to your pipeline. Follow up within one business day.</p>
       </div>
     </form>
   )
@@ -269,16 +269,16 @@ export default function App() {
   return (
     <div className="page">
       <header className="nav">
-        <a className="nav__brand" href="#top" aria-label="Ridgeguard Safety Staffing home">
+        <a className="nav__brand" href="#top" aria-label="MacKnight Safety Solutions home">
           <span className="nav__mark" aria-hidden="true" />
-          Ridgeguard
+          MacKnight
         </a>
         <div className="nav__links">
           <a className="nav__link" href="#finder">
             Find sites
           </a>
           <a className="nav__cta" href="#request">
-            Request staffing
+            Log a lead
           </a>
         </div>
       </header>
@@ -297,23 +297,23 @@ export default function App() {
 
           <div className="hero__content">
             <p className="hero__brand" id="hero-brand">
-              Ridgeguard Safety Staffing
+              MacKnight Safety Solutions · Internal Tool
             </p>
             <h1 className="hero__headline">
-              Certified safety talent.
-              <span> On site when you need them.</span>
+              Find the sites that need safety staff.
+              <span> Then work the pipeline.</span>
             </h1>
             <p className="hero__lede">
-              We place vetted safety officers, HSE managers, and coordinators on
-              industrial and construction projects—so your crews stay protected
-              and productive.
+              Internal prospecting console for the MacKnight business development
+              team. Map a territory, rank active jobsites by staffing-need
+              probability, and log the leads worth pursuing.
             </p>
             <div className="hero__actions">
               <a className="btn btn--primary" href="#finder">
                 Find high-need sites
               </a>
               <a className="btn btn--ghost" href="#request">
-                Request staffing
+                Log a lead
               </a>
             </div>
           </div>
@@ -326,7 +326,7 @@ export default function App() {
           aria-labelledby="finder-heading"
         >
           <div className="section__inner">
-            <p className="eyebrow">Lead generator</p>
+            <p className="eyebrow">Prospecting</p>
             <h2 id="finder-heading">Map your territory. Rank who needs safety staff.</h2>
             <p className="section__lede">
               Set a city or state and a mileage radius. We surface active sites
@@ -344,11 +344,11 @@ export default function App() {
           aria-labelledby="roles-heading"
         >
           <div className="section__inner">
-            <p className="eyebrow">What we staff</p>
-            <h2 id="roles-heading">Safety professionals built for live jobsites.</h2>
+            <p className="eyebrow">Placement reference</p>
+            <h2 id="roles-heading">Roles we place.</h2>
             <p className="section__lede">
-              Temporary, contract-to-hire, and project-based placements across
-              high-risk environments.
+              Quick reference for reps: temporary, contract-to-hire, and
+              project-based placements across high-risk environments.
             </p>
             <ul className="role-list">
               {ROLES.map((role) => (
@@ -375,7 +375,7 @@ export default function App() {
           aria-labelledby="process-heading"
         >
           <div className="section__inner">
-            <p className="eyebrow">How it works</p>
+            <p className="eyebrow">Placement workflow</p>
             <h2 id="process-heading">From open role to boots on the ground.</h2>
             <ol className="steps">
               {STEPS.map((step) => (
@@ -399,11 +399,11 @@ export default function App() {
         >
           <div className="section__inner request__layout">
             <div className="request__copy">
-              <p className="eyebrow">Lead request</p>
-              <h2 id="request-heading">Tell us what your site needs.</h2>
+              <p className="eyebrow">Log a lead</p>
+              <h2 id="request-heading">Add a new lead to the pipeline.</h2>
               <p className="section__lede">
-                Share a few details and a Ridgeguard staffing lead will match
-                certified safety professionals to your timeline and credentials.
+                Capture a prospect's details so a MacKnight staffing lead can
+                follow up and match certified safety professionals to the site.
               </p>
               <ul className="request__points">
                 <li>OSHA, CSP, CHST, and trade-specific screening</li>
@@ -423,14 +423,14 @@ export default function App() {
           <div className="footer__brand">
             <span className="nav__mark" aria-hidden="true" />
             <div>
-              <strong>Ridgeguard Safety Staffing</strong>
+              <strong>MacKnight Safety Solutions</strong>
               <p>Protecting people. Staffing the professionals who do it.</p>
             </div>
           </div>
           <div className="footer__meta">
-            <a href="mailto:leads@ridgeguard.example">leads@ridgeguard.example</a>
+            <a href="mailto:leads@macknight.example">leads@macknight.example</a>
             <a href="tel:+15550128000">(555) 012-8000</a>
-            <p>© {new Date().getFullYear()} Ridgeguard Safety Staffing</p>
+            <p>© {new Date().getFullYear()} MacKnight Safety Solutions</p>
           </div>
         </div>
       </footer>
