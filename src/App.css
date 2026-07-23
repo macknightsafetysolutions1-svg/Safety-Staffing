@@ -1,0 +1,886 @@
+.page--app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* —— App bar —— */
+.app-bar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  border-bottom: 1px solid rgba(242, 240, 235, 0.1);
+  background: rgba(18, 20, 24, 0.92);
+  backdrop-filter: blur(10px);
+}
+
+.app-bar__inner {
+  width: min(100%, var(--max));
+  margin-inline: auto;
+  padding: 0.9rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.app-bar__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.app-bar__brand strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1.1;
+}
+
+.app-bar__product {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--mist);
+  letter-spacing: 0.02em;
+}
+
+.app-bar__badge {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: var(--amber);
+  padding: 0.4rem 0.65rem;
+}
+
+.nav__mark {
+  width: 0.85rem;
+  height: 0.85rem;
+  background: var(--amber);
+  clip-path: polygon(50% 0%, 100% 28%, 100% 72%, 50% 100%, 0% 72%, 0% 28%);
+  flex-shrink: 0;
+}
+
+/* —— Buttons —— */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 3rem;
+  padding: 0.75rem 1.35rem;
+  border: 1px solid transparent;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    background 0.25s var(--ease-out),
+    color 0.25s var(--ease-out),
+    border-color 0.25s var(--ease-out),
+    transform 0.25s var(--ease-out);
+}
+
+.btn--small {
+  min-height: 2.25rem;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.85rem;
+}
+
+.btn--primary {
+  background: var(--amber);
+  color: var(--ink);
+}
+
+.btn--primary:hover {
+  background: var(--amber-hot);
+  transform: translateY(-1px);
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--paper);
+  border-color: rgba(242, 240, 235, 0.35);
+}
+
+.btn--ghost:hover {
+  border-color: var(--paper);
+  background: rgba(242, 240, 235, 0.06);
+}
+
+/* —— Main layout —— */
+.app-main {
+  flex: 1;
+  width: min(100%, var(--max));
+  margin-inline: auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+.app-intro {
+  margin-bottom: 2rem;
+  max-width: 42rem;
+}
+
+.eyebrow {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 0.65rem;
+}
+
+.app-intro h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.1rem, 5vw, 3.25rem);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: 0.01em;
+  text-wrap: balance;
+  margin-bottom: 0.85rem;
+}
+
+.app-intro__lede {
+  color: var(--mist);
+  margin-bottom: 1.25rem;
+}
+
+.app-intro__points {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.app-intro__points li {
+  position: relative;
+  padding-left: 1.1rem;
+  color: var(--paper);
+  font-size: 0.98rem;
+}
+
+.app-intro__points li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 0.4rem;
+  height: 0.4rem;
+  background: var(--amber);
+}
+
+/* —— Prospect finder —— */
+.finder__form {
+  display: grid;
+  gap: 1.25rem;
+  margin-bottom: 1.75rem;
+  padding: 1.35rem;
+  background: rgba(18, 20, 24, 0.72);
+  border: 1px solid rgba(242, 240, 235, 0.12);
+}
+
+.finder__mode {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.finder__mode label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.55rem 0.9rem;
+  border: 1px solid rgba(242, 240, 235, 0.18);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--mist);
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+}
+
+.finder__mode label.is-active {
+  border-color: var(--amber);
+  color: var(--paper);
+  background: rgba(229, 160, 18, 0.1);
+}
+
+.finder__mode input {
+  accent-color: var(--amber);
+}
+
+.finder__fields {
+  display: grid;
+  gap: 1rem;
+}
+
+.finder__submit {
+  display: flex;
+  align-items: end;
+}
+
+.finder__submit .btn {
+  width: 100%;
+}
+
+.finder__subfilter {
+  margin: 0;
+  padding: 1rem 0 0;
+  border: 0;
+  border-top: 1px solid rgba(242, 240, 235, 0.1);
+  display: grid;
+  gap: 0.75rem;
+}
+
+.finder__subfilter legend {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--amber);
+  padding: 0;
+}
+
+.finder__subfilter-hint {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--mist);
+}
+
+.finder__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.chip {
+  border: 1px solid rgba(242, 240, 235, 0.2);
+  background: transparent;
+  color: var(--mist);
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 0.45rem 0.7rem;
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+}
+
+.chip:hover {
+  border-color: rgba(229, 160, 18, 0.55);
+  color: var(--paper);
+}
+
+.chip.is-active {
+  border-color: var(--amber);
+  background: rgba(229, 160, 18, 0.14);
+  color: var(--paper);
+}
+
+.field--subfilter-select {
+  max-width: 22rem;
+}
+
+.prospect__industry {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0.35rem 0 0.45rem;
+}
+
+.prospect__industry-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: var(--amber);
+  padding: 0.2rem 0.4rem;
+}
+
+.prospect__industry-value {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--paper);
+}
+
+.finder__summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.finder__summary > div {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.finder__filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--mist);
+  cursor: pointer;
+}
+
+.finder__filter input {
+  accent-color: var(--amber);
+}
+
+.finder__empty {
+  color: var(--mist);
+  padding: 1.5rem 0;
+}
+
+.finder__list {
+  display: grid;
+  gap: 1rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.field span {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--mist);
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-height: 2.85rem;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid rgba(242, 240, 235, 0.18);
+  background: rgba(242, 240, 235, 0.04);
+  color: var(--paper);
+  border-radius: 0;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.field select {
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--amber) 50%),
+    linear-gradient(135deg, var(--amber) 50%, transparent 50%);
+  background-position:
+    calc(100% - 1.15rem) calc(50% - 0.15rem),
+    calc(100% - 0.85rem) calc(50% - 0.15rem);
+  background-size: 0.35rem 0.35rem, 0.35rem 0.35rem;
+  background-repeat: no-repeat;
+  padding-right: 2.25rem;
+}
+
+.field select option {
+  background: var(--ink-soft);
+  color: var(--paper);
+}
+
+.field input::placeholder {
+  color: rgba(196, 201, 209, 0.45);
+}
+
+.field input:hover,
+.field select:hover,
+.field input:focus,
+.field select:focus {
+  border-color: rgba(229, 160, 18, 0.65);
+  background: rgba(242, 240, 235, 0.07);
+  outline: none;
+}
+
+.form-error {
+  margin: 0;
+  color: #ffb4ab;
+  font-size: 0.95rem;
+}
+
+/* —— Prospect cards —— */
+.prospect {
+  border: 1px solid rgba(242, 240, 235, 0.12);
+  background: rgba(28, 31, 36, 0.88);
+  padding: 1.15rem 1.2rem 1rem;
+}
+
+.prospect--touched {
+  border-color: rgba(229, 160, 18, 0.28);
+}
+
+.prospect__header {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.85rem 1rem;
+  align-items: start;
+  margin-bottom: 1rem;
+}
+
+.prospect__rank {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--amber);
+  letter-spacing: 0.04em;
+}
+
+.prospect__company {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--mist);
+  margin-bottom: 0.2rem;
+}
+
+.prospect__site {
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1.1;
+  margin-bottom: 0.35rem;
+}
+
+.prospect__meta {
+  font-size: 0.92rem;
+  color: var(--mist);
+}
+
+.prospect__score {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 0.75rem;
+  padding-top: 0.35rem;
+  border-top: 1px solid rgba(242, 240, 235, 0.08);
+}
+
+.prospect__score strong {
+  font-family: var(--font-display);
+  font-size: 1.85rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--paper);
+}
+
+.prospect__score-label {
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--mist);
+}
+
+.tier {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.28rem 0.5rem;
+}
+
+.tier--hot {
+  background: rgba(229, 160, 18, 0.22);
+  color: var(--amber-hot);
+}
+
+.tier--high {
+  background: rgba(229, 160, 18, 0.12);
+  color: var(--amber);
+}
+
+.tier--mid {
+  background: rgba(196, 201, 209, 0.12);
+  color: var(--mist);
+}
+
+.tier--low {
+  background: rgba(196, 201, 209, 0.06);
+  color: var(--mist);
+}
+
+.prospect__dm {
+  display: grid;
+  gap: 0.55rem;
+  padding: 0.9rem 0;
+  border-top: 1px solid rgba(242, 240, 235, 0.08);
+}
+
+.prospect__dm-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--amber);
+}
+
+.prospect__dm-body {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.prospect__dm-body strong {
+  display: block;
+  font-size: 1.05rem;
+}
+
+.prospect__dm-body span {
+  color: var(--mist);
+  font-size: 0.95rem;
+}
+
+.prospect__dm-conf {
+  display: grid;
+  gap: 0.15rem;
+  font-size: 0.88rem;
+  color: var(--mist);
+}
+
+.prospect__dm-source {
+  font-size: 0.8rem;
+  opacity: 0.85;
+}
+
+.prospect__dm-contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+}
+
+.prospect__dm-contact a {
+  color: var(--paper);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+  text-decoration-color: rgba(229, 160, 18, 0.55);
+}
+
+.prospect__dm-contact a:hover {
+  color: var(--amber);
+}
+
+.prospect__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.prospect__talk {
+  margin: 0.35rem 0 0;
+  padding: 0.9rem 1rem;
+  background: rgba(18, 20, 24, 0.75);
+  border: 1px solid rgba(242, 240, 235, 0.1);
+  color: var(--mist);
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.prospect__dm-empty {
+  color: var(--mist);
+  font-size: 0.95rem;
+  padding: 0.75rem 0;
+  border-top: 1px solid rgba(242, 240, 235, 0.08);
+}
+
+.prospect__pipeline {
+  display: grid;
+  gap: 0.75rem;
+  padding: 0.85rem 0 0.35rem;
+  border-top: 1px solid rgba(242, 240, 235, 0.08);
+}
+
+.prospect__toggle {
+  margin-top: 0.35rem;
+  padding: 0.45rem 0;
+  border: 0;
+  background: transparent;
+  color: var(--amber);
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  text-align: left;
+}
+
+.prospect__toggle:hover {
+  color: var(--amber-hot);
+}
+
+.prospect__details {
+  display: grid;
+  gap: 1rem;
+  margin-top: 0.5rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(242, 240, 235, 0.08);
+}
+
+.prospect__reasons,
+.prospect__signals ul,
+.prospect__stakeholders ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  color: var(--mist);
+  display: grid;
+  gap: 0.35rem;
+}
+
+.prospect__stakeholders strong {
+  color: var(--paper);
+}
+
+.app-bar__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.app-bar__user {
+  font-size: 0.85rem;
+  color: var(--mist);
+}
+
+.nav__link {
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--paper);
+  opacity: 0.9;
+}
+
+.nav__link:hover {
+  color: var(--amber);
+}
+
+.form-success {
+  margin: 0 0 1rem;
+  color: #b7e0c2;
+  font-size: 0.95rem;
+  word-break: break-word;
+}
+
+.form-success a {
+  color: var(--amber-hot);
+  text-decoration: underline;
+}
+
+/* —— Auth —— */
+.auth-shell {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 2rem 1.25rem;
+}
+
+.auth-card {
+  width: min(100%, 26rem);
+  display: grid;
+  gap: 0.9rem;
+  padding: 1.75rem;
+  background: rgba(18, 20, 24, 0.82);
+  border: 1px solid rgba(242, 240, 235, 0.12);
+}
+
+.auth-card h1 {
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  font-weight: 600;
+  line-height: 1.05;
+}
+
+.auth-card__lede {
+  color: var(--mist);
+  margin-bottom: 0.35rem;
+}
+
+.auth-card .btn {
+  width: 100%;
+  margin-top: 0.35rem;
+}
+
+.auth-card__footer {
+  text-align: center;
+  font-size: 0.92rem;
+  color: var(--mist);
+}
+
+.auth-card__footer a {
+  color: var(--amber);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+/* —— Admin —— */
+.admin-panel {
+  margin-top: 1.75rem;
+  padding: 1.35rem;
+  border: 1px solid rgba(242, 240, 235, 0.12);
+  background: rgba(18, 20, 24, 0.65);
+}
+
+.admin-panel h2 {
+  font-family: var(--font-display);
+  font-size: 1.55rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.admin-create {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.admin-create__submit {
+  display: flex;
+  align-items: end;
+}
+
+.admin-table-wrap {
+  overflow-x: auto;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+
+.admin-table th,
+.admin-table td {
+  text-align: left;
+  vertical-align: top;
+  padding: 0.75rem 0.65rem;
+  border-bottom: 1px solid rgba(242, 240, 235, 0.1);
+}
+
+.admin-table th {
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--mist);
+  font-weight: 600;
+}
+
+.admin-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.admin-pill {
+  display: inline-block;
+  margin-left: 0.5rem;
+  padding: 0.15rem 0.4rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: var(--amber);
+}
+
+@media (min-width: 800px) {
+  .admin-create {
+    grid-template-columns: 1fr 1.2fr 0.7fr 1fr auto;
+    align-items: end;
+  }
+}
+
+/* —— Footer —— */
+.footer--app {
+  padding: 1.5rem;
+  border-top: 1px solid rgba(242, 240, 235, 0.1);
+}
+
+.footer__inner {
+  width: min(100%, var(--max));
+  margin-inline: auto;
+}
+
+.footer--app p {
+  color: var(--mist);
+  font-size: 0.9rem;
+}
+
+.footer--app strong {
+  color: var(--paper);
+}
+
+@media (min-width: 640px) {
+  .app-main {
+    padding: 2.5rem 2rem 5rem;
+  }
+
+  .finder__form {
+    padding: 1.75rem;
+  }
+
+  .finder__fields {
+    grid-template-columns: repeat(2, 1fr) auto;
+    align-items: end;
+  }
+
+  .finder__submit .btn {
+    width: auto;
+    min-width: 9.5rem;
+  }
+
+  .prospect__header {
+    grid-template-columns: auto 1fr auto;
+  }
+
+  .prospect__score {
+    grid-column: auto;
+    border-top: 0;
+    padding-top: 0;
+    flex-direction: column;
+    align-items: flex-end;
+    text-align: right;
+    gap: 0.2rem;
+  }
+
+  .prospect__pipeline {
+    grid-template-columns: 12rem 1fr;
+    align-items: end;
+  }
+}
+
+@media (min-width: 900px) {
+  .finder__fields {
+    grid-template-columns: 1.4fr 0.8fr 0.8fr auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .btn {
+    transition: none;
+  }
+}
