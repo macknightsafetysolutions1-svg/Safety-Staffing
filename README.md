@@ -1,11 +1,18 @@
-# Ridgeguard Safety Staffing
+# MacKnight Safety Solutions — Sales Prospecting
 
-Lead generation site for a safety staffing company that places certified safety professionals on industrial and construction jobsites.
+Internal tool for the MacKnight sales team to find jobsites that likely need safety staffing services and initiate outbound conversations.
+
+## What it does
+
+1. **Territory search** — City + mileage or State + mileage
+2. **Need ranking** — Jobsites sorted by probability they need SSO / HSE / safety coordinator coverage
+3. **Decision makers** — Primary outreach target with confidence score, email/phone when available
+4. **Sales actions** — Copy email/phone, copy talk track, track pipeline status + notes (saved in browser `localStorage`)
 
 ## Stack
 
 - Vite + React + TypeScript
-- Pure CSS (no UI framework)
+- Pure CSS
 
 ## Develop
 
@@ -21,16 +28,8 @@ npm run build
 npm run preview
 ```
 
-## Lead capture
+## Data
 
-Inbound staffing requests are validated client-side and stored in `localStorage` under `ridgeguard-leads` as a demo. Replace the submit handler in `src/App.tsx` with your CRM or form API endpoint for production.
+Demo prospects live in `src/data/prospects.ts`. Scoring and geofencing are in `src/lib/geo.ts`. Replace with live permit / OSHA / CRM feeds for production use.
 
-## Territory lead generator
-
-The **Find sites** tool (`#finder`) lets reps define a territory by:
-
-- **City + mileage** or **State + mileage**
-- Ranking matching jobsites by **need probability** (phase, crew size, missing safety staff, incidents, permits, industry risk)
-- Surfacing the **likely decision maker** (highest decision-confidence stakeholder) with contact details when available
-
-Demo prospect data lives in `src/data/prospects.ts`. Scoring and geofencing are in `src/lib/geo.ts`. Swap the corpus for live permit / OSHA / CRM feeds when ready.
+Pipeline status is stored locally under `macknight-prospect-pipeline`.

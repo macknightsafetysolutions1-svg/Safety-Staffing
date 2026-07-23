@@ -1,4 +1,4 @@
-import { useMemo, useState, type FormEvent } from 'react'
+import { useEffect, useMemo, useState, type FormEvent } from 'react'
 import { CITY_CENTROIDS, US_STATES } from '../data/prospects'
 import {
   RADIUS_OPTIONS,
@@ -12,6 +12,30 @@ const CITY_OPTIONS = Object.values(CITY_CENTROIDS)
   .map((c) => c.label)
   .sort((a, b) => a.localeCompare(b))
 
+const PIPELINE_KEY = 'macknight-prospect-pipeline'
+
+type PipelineStatus = 'new' | 'outreach' | 'spoke' | 'nurture' | 'closed'
+
+type PipelineEntry = {
+  status: PipelineStatus
+  note: string
+  updatedAt: string
+}
+
+type PipelineMap = Record<string, PipelineEntry>
+
+function loadPipeline(): PipelineMap {
+  try {
+    return JSON.parse(localStorage.getItem(PIPELINE_KEY) ?? '{}') as PipelineMap
+  } catch {
+    return {}
+  }
+}
+
+function savePipeline(map: PipelineMap) {
+  localStorage.setItem(PIPELINE_KEY, JSON.stringify(map))
+}
+
 function probabilityTier(score: number): { label: string; className: string } {
   if (score >= 80) return { label: 'Very high', className: 'tier tier--hot' }
   if (score >= 65) return { label: 'High', className: 'tier tier--high' }
@@ -19,13 +43,72 @@ function probabilityTier(score: number): { label: string; className: string } {
   return { label: 'Lower', className: 'tier tier--low' }
 }
 
-function ProspectCard({ prospect, rank }: { prospect: RankedProspect; rank: number }) {
-  const [open, setOpen] = useState(rank < 3)
-  const tier = probabilityTier(prospect.needProbability)
+function buildTalkTrack(prospect: RankedProspect): string {
   const dm = prospect.primaryDecisionMaker
+  const greeting = dm ? `Hi ${dm.name.split(' ')[0]},` : 'Hi,'
+  const gap = !prospect.hasDedicatedSafetyStaff
+    ? 'I noticed there may not be dedicated safety coverage on the roster'
+    : 'I saw the site is in a high-demand phase where surge safety coverage often helps'
+  return `${greeting}
+
+I'm with MacKnight Safety Solutions. We staff certified safety officers, HSE managers, and coordinators for active jobsites.
+
+Looking at ${prospect.siteName} (${prospect.city}, ${prospect.state}) — ${prospect.phase.toLowerCase()}, ~${prospect.crewSize} on site — ${gap}. ${prospect.signals[0] ?? ''}
+
+Would you be open to a quick call this week about short-term or project-based coverage?
+
+Thanks,
+MacKnight Safety Solutions`
+}
+
+function CopyButton({ text, label }: { text: string; label: string }) {
+  const [copied, setCopied] = useState(false)
+
+  async function handleCopy() {
+    try {
+      await navigator.clipboard.writeText(text)
+      setCopied(true)
+      window.setTimeout(() => setCopied(false), 1600)
+    } catch {
+      // Fallback for restricted clipboard
+      const area = document.createElement('textarea')
+      area.value = text
+      document.body.appendChild(area)
+      area.select()
+      document.execCommand('copy')
+      document.body.removeChild(area)
+      setCopied(true)
+      window.setTimeout(() => setCopied(false), 1600)
+    }
+  }
 
   return (
-    <article className="prospect">
+    <button type="button" className="btn btn--ghost btn--small" onClick={handleCopy}>
+      {copied ? 'Copied' : label}
+    </button>
+  )
+}
+
+function ProspectCard({
+  prospect,
+  rank,
+  pipeline,
+  onPipelineChange,
+}: {
+  prospect: RankedProspect
+  rank: number
+  pipeline: PipelineEntry | undefined
+  onPipelineChange: (id: string, entry: PipelineEntry) => void
+}) {
+  const [open, setOpen] = useState(rank < 2)
+  const [showTalk, setShowTalk] = useState(false)
+  const tier = probabilityTier(prospect.needProbability)
+  const dm = prospect.primaryDecisionMaker
+  const status = pipeline?.status ?? 'new'
+  const talkTrack = useMemo(() => buildTalkTrack(prospect), [prospect])
+
+  return (
+    <article className={`prospect ${status !== 'new' ? 'prospect--touched' : ''}`}>
       <header className="prospect__header">
         <div className="prospect__rank" aria-hidden="true">
           {String(rank + 1).padStart(2, '0')}
@@ -41,6 +124,8 @@ function ProspectCard({ prospect, rank }: { prospect: RankedProspect; rank: numb
             {prospect.industry}
             <span aria-hidden="true"> · </span>
             {prospect.phase}
+            <span aria-hidden="true"> · </span>
+            ~{prospect.crewSize} on site
           </p>
         </div>
         <div className="prospect__score" title="Estimated probability this site needs safety staffing">
@@ -52,28 +137,80 @@ function ProspectCard({ prospect, rank }: { prospect: RankedProspect; rank: numb
 
       {dm ? (
         <div className="prospect__dm">
-          <p className="prospect__dm-label">Likely decision maker</p>
+          <p className="prospect__dm-label">Primary outreach target</p>
           <div className="prospect__dm-body">
             <div>
               <strong>{dm.name}</strong>
               <span>{dm.title}</span>
             </div>
             <div className="prospect__dm-conf">
-              <span>{dm.decisionConfidence}% match confidence</span>
+              <span>{dm.decisionConfidence}% decision-maker confidence</span>
               <span className="prospect__dm-source">{dm.source}</span>
             </div>
           </div>
           <div className="prospect__dm-contact">
-            {dm.email ? <a href={`mailto:${dm.email}`}>{dm.email}</a> : null}
+            {dm.email ? <a href={`mailto:${dm.email}?subject=${encodeURIComponent(`Safety coverage — ${prospect.siteName}`)}`}>{dm.email}</a> : null}
             {dm.phone ? <a href={`tel:${dm.phone.replace(/\D/g, '')}`}>{dm.phone}</a> : null}
             {!dm.email && !dm.phone ? (
-              <span className="muted">Contact via company switchboard</span>
+              <span className="muted">No direct contact — try company switchboard</span>
             ) : null}
           </div>
+          <div className="prospect__actions">
+            {dm.email ? <CopyButton text={dm.email} label="Copy email" /> : null}
+            {dm.phone ? <CopyButton text={dm.phone} label="Copy phone" /> : null}
+            <CopyButton text={talkTrack} label="Copy talk track" />
+            <button
+              type="button"
+              className="btn btn--ghost btn--small"
+              onClick={() => setShowTalk((v) => !v)}
+            >
+              {showTalk ? 'Hide talk track' : 'View talk track'}
+            </button>
+          </div>
+          {showTalk ? (
+            <pre className="prospect__talk">{talkTrack}</pre>
+          ) : null}
         </div>
       ) : (
-        <p className="prospect__dm-empty">No stakeholder identified yet — enrich from CRM.</p>
+        <p className="prospect__dm-empty">No stakeholder identified yet — enrich before outreach.</p>
       )}
+
+      <div className="prospect__pipeline">
+        <label className="field field--inline">
+          <span>Pipeline</span>
+          <select
+            value={status}
+            onChange={(e) =>
+              onPipelineChange(prospect.id, {
+                status: e.target.value as PipelineStatus,
+                note: pipeline?.note ?? '',
+                updatedAt: new Date().toISOString(),
+              })
+            }
+          >
+            <option value="new">New</option>
+            <option value="outreach">Outreach sent</option>
+            <option value="spoke">Spoke / meeting</option>
+            <option value="nurture">Nurture</option>
+            <option value="closed">Closed / not a fit</option>
+          </select>
+        </label>
+        <label className="field field--grow">
+          <span>Sales note</span>
+          <input
+            type="text"
+            value={pipeline?.note ?? ''}
+            placeholder="Left voicemail, asked for HSE lead…"
+            onChange={(e) =>
+              onPipelineChange(prospect.id, {
+                status,
+                note: e.target.value,
+                updatedAt: new Date().toISOString(),
+              })
+            }
+          />
+        </label>
+      </div>
 
       <button
         type="button"
@@ -92,7 +229,7 @@ function ProspectCard({ prospect, rank }: { prospect: RankedProspect; rank: numb
             ))}
           </ul>
           <div className="prospect__signals">
-            <p className="prospect__dm-label">Site signals</p>
+            <p className="prospect__dm-label">Site signals for the call</p>
             <ul>
               {prospect.signals.map((s) => (
                 <li key={s}>{s}</li>
@@ -108,6 +245,8 @@ function ProspectCard({ prospect, rank }: { prospect: RankedProspect; rank: numb
                   .map((s) => (
                     <li key={s.name}>
                       <strong>{s.name}</strong> — {s.title} ({s.decisionConfidence}%)
+                      {s.email ? ` · ${s.email}` : ''}
+                      {s.phone ? ` · ${s.phone}` : ''}
                     </li>
                   ))}
               </ul>
@@ -131,11 +270,35 @@ export default function ProspectFinder() {
     radiusMiles: 50,
   })
   const [error, setError] = useState('')
+  const [pipeline, setPipeline] = useState<PipelineMap>({})
+  const [hideWorked, setHideWorked] = useState(false)
+
+  useEffect(() => {
+    setPipeline(loadPipeline())
+  }, [])
+
+  function updatePipeline(id: string, entry: PipelineEntry) {
+    setPipeline((prev) => {
+      const next = { ...prev, [id]: entry }
+      savePipeline(next)
+      return next
+    })
+  }
 
   const { results, originLabel } = useMemo(() => {
     if (!query) return { results: [] as RankedProspect[], originLabel: '' }
     return searchProspects(query)
   }, [query])
+
+  const visibleResults = useMemo(() => {
+    if (!hideWorked) return results
+    return results.filter((r) => {
+      const status = pipeline[r.id]?.status ?? 'new'
+      return status === 'new'
+    })
+  }, [results, hideWorked, pipeline])
+
+  const workedCount = results.filter((r) => (pipeline[r.id]?.status ?? 'new') !== 'new').length
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault()
@@ -262,7 +425,7 @@ export default function ProspectFinder() {
 
           <div className="finder__submit">
             <button type="submit" className="btn btn--primary">
-              Find sites
+              Find jobsites
             </button>
           </div>
         </div>
@@ -277,21 +440,45 @@ export default function ProspectFinder() {
       {query && !error ? (
         <div className="finder__results" aria-live="polite">
           <div className="finder__summary">
-            <p>
-              <strong>{results.length}</strong> site{results.length === 1 ? '' : 's'} within{' '}
-              <strong>{query.radiusMiles} mi</strong> of <strong>{originLabel}</strong>
-            </p>
-            <p className="muted">Ranked by probability of needing safety staffing.</p>
+            <div>
+              <p>
+                <strong>{visibleResults.length}</strong> jobsite
+                {visibleResults.length === 1 ? '' : 's'} within{' '}
+                <strong>{query.radiusMiles} mi</strong> of <strong>{originLabel}</strong>
+                {hideWorked && workedCount > 0 ? (
+                  <span className="muted"> · {workedCount} hidden (already worked)</span>
+                ) : null}
+              </p>
+              <p className="muted">
+                Ranked by probability they need safety staffing — highest first for outbound sales.
+              </p>
+            </div>
+            <label className="finder__filter">
+              <input
+                type="checkbox"
+                checked={hideWorked}
+                onChange={(e) => setHideWorked(e.target.checked)}
+              />
+              Hide already-worked
+            </label>
           </div>
 
-          {results.length === 0 ? (
+          {visibleResults.length === 0 ? (
             <p className="finder__empty">
-              No active sites in this radius. Widen mileage or try another city/state.
+              {results.length === 0
+                ? 'No active sites in this radius. Widen mileage or try another city/state.'
+                : 'All sites in this territory are marked worked. Uncheck the filter to see them.'}
             </p>
           ) : (
             <div className="finder__list">
-              {results.map((prospect, index) => (
-                <ProspectCard key={prospect.id} prospect={prospect} rank={index} />
+              {visibleResults.map((prospect, index) => (
+                <ProspectCard
+                  key={prospect.id}
+                  prospect={prospect}
+                  rank={index}
+                  pipeline={pipeline[prospect.id]}
+                  onPipelineChange={updatePipeline}
+                />
               ))}
             </div>
           )}
